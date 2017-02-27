@@ -1,26 +1,24 @@
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		if (_p0.ctor === 'UsernameInput') {
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{username: _p0._0});
-		} else {
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{password: _p0._0});
-		}
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{query: _p0._0});
 	});
-var _user$project$Main$initModel = {username: '', password: ''};
+var _user$project$Main$initModel = {
+	runners: {ctor: '[]'},
+	query: ''
+};
 var _user$project$Main$Model = F2(
 	function (a, b) {
-		return {username: a, password: b};
+		return {runners: a, query: b};
 	});
-var _user$project$Main$PasswordInput = function (a) {
-	return {ctor: 'PasswordInput', _0: a};
-};
-var _user$project$Main$UsernameInput = function (a) {
-	return {ctor: 'UsernameInput', _0: a};
+var _user$project$Main$Runner = F3(
+	function (a, b, c) {
+		return {id: a, name: b, location: c};
+	});
+var _user$project$Main$QueryInput = function (a) {
+	return {ctor: 'QueryInput', _0: a};
 };
 var _user$project$Main$view = function (model) {
 	return A2(
@@ -29,11 +27,11 @@ var _user$project$Main$view = function (model) {
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$h3,
+				_elm_lang$html$Html$h1,
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text('Please Login'),
+					_0: _elm_lang$html$Html$text('Leader Board'),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
@@ -50,50 +48,16 @@ var _user$project$Main$view = function (model) {
 								_0: _elm_lang$html$Html_Attributes$type_('text'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$UsernameInput),
+									_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$QueryInput),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$placeholder('Enter username'),
+										_0: _elm_lang$html$Html_Attributes$placeholder('Search Here'),
 										_1: {ctor: '[]'}
 									}
 								}
 							},
 							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$input,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$type_('text'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$PasswordInput),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$placeholder('Enter password'),
-											_1: {ctor: '[]'}
-										}
-									}
-								},
-								{ctor: '[]'}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$input,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$type_('submit'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('Submit'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}
+						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			}
