@@ -1,34 +1,73 @@
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		return _elm_lang$core$Native_Utils.update(
-			model,
-			{query: _p0._0});
+		switch (_p0.ctor) {
+			case 'ChangePage':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{page: _p0._0});
+			case 'LeaderBoardMsg':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						leaderBoard: A2(_user$project$LeaderBoard$update, _p0._0, model.leaderBoard)
+					});
+			default:
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						login: A2(_user$project$Login$update, _p0._0, model.login)
+					});
+		}
 	});
-var _user$project$Main$initModel = {
-	runners: {ctor: '[]'},
-	query: ''
-};
-var _user$project$Main$Model = F2(
-	function (a, b) {
-		return {runners: a, query: b};
-	});
-var _user$project$Main$Runner = F3(
+var _user$project$Main$Model = F3(
 	function (a, b, c) {
-		return {id: a, name: b, location: c};
+		return {page: a, leaderBoard: b, login: c};
 	});
-var _user$project$Main$QueryInput = function (a) {
-	return {ctor: 'QueryInput', _0: a};
+var _user$project$Main$LoginPage = {ctor: 'LoginPage'};
+var _user$project$Main$LeaderBoardPage = {ctor: 'LeaderBoardPage'};
+var _user$project$Main$initModel = {page: _user$project$Main$LeaderBoardPage, login: _user$project$Login$initModel, leaderBoard: _user$project$LeaderBoard$initModel};
+var _user$project$Main$LoginMsg = function (a) {
+	return {ctor: 'LoginMsg', _0: a};
+};
+var _user$project$Main$LeaderBoardMsg = function (a) {
+	return {ctor: 'LeaderBoardMsg', _0: a};
+};
+var _user$project$Main$ChangePage = function (a) {
+	return {ctor: 'ChangePage', _0: a};
 };
 var _user$project$Main$view = function (model) {
+	var page = function () {
+		var _p1 = model.page;
+		if (_p1.ctor === 'LeaderBoardPage') {
+			return A2(
+				_elm_lang$html$Html$map,
+				_user$project$Main$LeaderBoardMsg,
+				_user$project$LeaderBoard$view(model.leaderBoard));
+		} else {
+			return A2(
+				_elm_lang$html$Html$map,
+				_user$project$Main$LoginMsg,
+				_user$project$Login$view(model.login));
+		}
+	}();
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$h1,
-				{ctor: '[]'},
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$href('#'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_user$project$Main$ChangePage(_user$project$Main$LeaderBoardPage)),
+						_1: {ctor: '[]'}
+					}
+				},
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html$text('Leader Board'),
@@ -37,29 +76,52 @@ var _user$project$Main$view = function (model) {
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$form,
+					_elm_lang$html$Html$span,
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$input,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$type_('text'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$QueryInput),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$placeholder('Search Here'),
-										_1: {ctor: '[]'}
-									}
-								}
-							},
-							{ctor: '[]'}),
+						_0: _elm_lang$html$Html$text(' | '),
 						_1: {ctor: '[]'}
 					}),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$a,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$href('#'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(
+									_user$project$Main$ChangePage(_user$project$Main$LoginPage)),
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Login'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$hr,
+							{ctor: '[]'},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: page,
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
 			}
 		});
 };

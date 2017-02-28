@@ -40,12 +40,10 @@ view : Model -> Html Msg
 view model =
     div []
         [ h1 [] [ text "Leader Board" ]
-        , Html.form []
-            [ input
-                [ type_ "text"
-                , onInput QueryInput
-                , placeholder "Search Here"
-                ]
-                []
+        , input
+            [ type_ "text"
+            , onInput QueryInput
+            , placeholder "Search Here"
             ]
+            []
         ]
