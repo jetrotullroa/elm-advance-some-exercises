@@ -1,4 +1,4 @@
-module Main exposing (..)
+module LeaderBoard exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -49,12 +49,3 @@ view model =
                 []
             ]
         ]
-
-
-main : Program Never Model Msg
-main =
-    Html.beginnerProgram
-        { model = initModel
-        , view = view
-        , update = update
-        }

@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Login exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -55,12 +55,3 @@ view model =
                 [ text "Submit" ]
             ]
         ]
-
-
-main : Program Never Model Msg
-main =
-    Html.beginnerProgram
-        { model = initModel
-        , view = view
-        , update = update
-        }
