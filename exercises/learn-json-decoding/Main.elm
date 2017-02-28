@@ -3,6 +3,7 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Events exposing (onClick)
 import Http exposing (..)
+import Json.Decode as JD exposing (..)
 
 
 main : Program Never Model Msg
@@ -22,7 +23,8 @@ randomJoke =
             "http://api.icndb.com/jokes/random"
 
         request =
-            Http.getString url
+            -- Http.getString url
+            Http.get url (at [ "value", "joke" ] string)
 
         cmd =
             Http.send Joke request

@@ -40,7 +40,21 @@ var _user$project$Main$Joke = function (a) {
 };
 var _user$project$Main$randomJoke = function () {
 	var url = 'http://api.icndb.com/jokes/random';
-	var request = _elm_lang$http$Http$getString(url);
+	var request = A2(
+		_elm_lang$http$Http$get,
+		url,
+		A2(
+			_elm_lang$core$Json_Decode$at,
+			{
+				ctor: '::',
+				_0: 'value',
+				_1: {
+					ctor: '::',
+					_0: 'joke',
+					_1: {ctor: '[]'}
+				}
+			},
+			_elm_lang$core$Json_Decode$string));
 	var cmd = A2(_elm_lang$http$Http$send, _user$project$Main$Joke, request);
 	return cmd;
 }();
