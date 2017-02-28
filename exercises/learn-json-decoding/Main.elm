@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
+import Html.Events exposing (onClick)
 import Http exposing (..)
 
 
@@ -35,6 +36,7 @@ type alias Model =
 
 type Msg
     = Joke (Result Http.Error String)
+    | RefreshJoke
 
 
 initModel : Model
@@ -56,6 +58,9 @@ update msg model =
         Joke (Err err) ->
             ( (toString err), Cmd.none )
 
+        RefreshJoke ->
+            ( "getting new joke...", randomJoke )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -65,5 +70,6 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     div []
-        [ p [] [ text model ]
+        [ button [ onClick RefreshJoke ] [ text "Random" ]
+        , p [] [ text model ]
         ]
