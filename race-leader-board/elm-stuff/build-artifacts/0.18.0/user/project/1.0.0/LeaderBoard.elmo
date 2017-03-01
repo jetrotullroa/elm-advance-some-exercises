@@ -1,0 +1,319 @@
+var _user$project$LeaderBoard$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$LeaderBoard$runnersHeader = A2(
+	_elm_lang$html$Html$thead,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$tr,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$th,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Name'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$th,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('From'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$th,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Age'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$th,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Bib #'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$th,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Last Marker'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$th,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Est. Miles'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			}),
+		_1: {ctor: '[]'}
+	});
+var _user$project$LeaderBoard$runner = function (_p0) {
+	var _p1 = _p0;
+	return A2(
+		_elm_lang$html$Html$tr,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$td,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(_p1.name),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$td,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(_p1.location),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$td,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_elm_lang$core$Basics$toString(_p1.age)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$td,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(_p1.bib)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$td,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('1 mi @ 08:30AM (TODO)'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$td,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											_elm_lang$core$Basics$toString(_p1.estimatedDistance)),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$LeaderBoard$runners = function (_p2) {
+	var _p3 = _p2;
+	return A2(
+		_elm_lang$html$Html$table,
+		{ctor: '[]'},
+		function (r) {
+			return {
+				ctor: '::',
+				_0: _user$project$LeaderBoard$runnersHeader,
+				_1: {
+					ctor: '::',
+					_0: r,
+					_1: {ctor: '[]'}
+				}
+			};
+		}(
+			A2(
+				_elm_lang$html$Html$tbody,
+				{ctor: '[]'},
+				A2(_elm_lang$core$List$map, _user$project$LeaderBoard$runner, _p3.runners))));
+};
+var _user$project$LeaderBoard$errorPanel = function (error) {
+	var _p4 = error;
+	if (_p4.ctor === 'Nothing') {
+		return _elm_lang$html$Html$text('');
+	} else {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('error'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(_p4._0),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$type_('button'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('×'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	}
+};
+var _user$project$LeaderBoard$update = F2(
+	function (msg, model) {
+		var _p5 = msg;
+		if (_p5.ctor === 'SearchInput') {
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{query: _p5._0}),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		} else {
+			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
+var _user$project$LeaderBoard$Model = F4(
+	function (a, b, c, d) {
+		return {error: a, query: b, runners: c, active: d};
+	});
+var _user$project$LeaderBoard$Runner = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {id: a, name: b, location: c, age: d, bib: e, estimatedDistance: f, lastMarkerDistance: g, lastMarkerTime: h, pace: i};
+	});
+var _user$project$LeaderBoard$tempRunners = {
+	ctor: '::',
+	_0: A9(_user$project$LeaderBoard$Runner, '1', 'James Moore', 'Turlock CA', 42, 1234, 0, 1, 1463154945381, 0.125),
+	_1: {
+		ctor: '::',
+		_0: A9(_user$project$LeaderBoard$Runner, '2', 'Meb Keflezighi', 'Turlock CA', 41, 1238, 0, 1, 1463154945381, 9.0e-2),
+		_1: {ctor: '[]'}
+	}
+};
+var _user$project$LeaderBoard$initModel = {error: _elm_lang$core$Maybe$Nothing, query: '', runners: _user$project$LeaderBoard$tempRunners, active: false};
+var _user$project$LeaderBoard$init = {ctor: '_Tuple2', _0: _user$project$LeaderBoard$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$LeaderBoard$Search = {ctor: 'Search'};
+var _user$project$LeaderBoard$SearchInput = function (a) {
+	return {ctor: 'SearchInput', _0: a};
+};
+var _user$project$LeaderBoard$searchForm = function (query) {
+	return A2(
+		_elm_lang$html$Html$form,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onSubmit(_user$project$LeaderBoard$Search),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$type_('text'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$placeholder('Search for runner...'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$value(query),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onInput(_user$project$LeaderBoard$SearchInput),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$type_('submit'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Search'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$LeaderBoard$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('main'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$LeaderBoard$errorPanel(model.error),
+			_1: {
+				ctor: '::',
+				_0: _user$project$LeaderBoard$searchForm(model.query),
+				_1: {
+					ctor: '::',
+					_0: _user$project$LeaderBoard$runners(model),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};

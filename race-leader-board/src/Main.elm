@@ -2,28 +2,94 @@ port module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
+import Navigation
+import LeaderBoard
 
 
+-- Main
+
+
+main : Program Never Model Msg
+main =
+    Navigation.program locationToMsg
+        { init = init
+        , update = update
+        , view = view
+        , subscriptions = subscriptions
+        }
+
+
+
+-- Main end
+-- Location and
+
+
+pageToHash : Page -> String
+pageToHash page =
+    case page of
+        LeaderBoardPage ->
+            "/#"
+
+        NotFound ->
+            "#notfound"
+
+
+hashToPage : String -> Page
+hashToPage hash =
+    case hash of
+        "/#" ->
+            LeaderBoardPage
+
+        "" ->
+            LeaderBoardPage
+
+        _ ->
+            NotFound
+
+
+locationToMsg : Navigation.Location -> Msg
+locationToMsg location =
+    location.hash
+        |> hashToPage
+        |> ChangePage
+
+
+
+--Location and Routing END
 -- model
 
 
 type alias Model =
     { page : Page
+    , leaderBoard : LeaderBoard.Model
     }
 
 
 type Page
     = NotFound
+    | LeaderBoardPage
 
 
-initModel : Model
-initModel =
-    { page = NotFound }
+init : Navigation.Location -> ( Model, Cmd Msg )
+init location =
+    let
+        page =
+            hashToPage location.hash
 
+        ( leaderBoardInitModel, leaderBoardCmd ) =
+            LeaderBoard.init
 
-init : ( Model, Cmd Msg )
-init =
-    ( initModel, Cmd.none )
+        initModel =
+            { page = page
+            , leaderBoard = leaderBoardInitModel
+            }
+
+        cmds =
+            Cmd.batch
+                [ Cmd.map LeaderBoardMsg leaderBoardCmd ]
+    in
+        ( initModel, cmds )
 
 
 
@@ -32,13 +98,27 @@ init =
 
 type Msg
     = Navigate Page
+    | ChangePage Page
+    | LeaderBoardMsg LeaderBoard.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Navigate page ->
+            ( { model | page = page }, Navigation.newUrl <| pageToHash page )
+
+        ChangePage page ->
             ( { model | page = page }, Cmd.none )
+
+        LeaderBoardMsg msg ->
+            let
+                ( leaderBoardModel, cmd ) =
+                    LeaderBoard.update msg model.leaderBoard
+            in
+                ( { model | leaderBoard = leaderBoardModel }
+                , Cmd.map LeaderBoardMsg cmd
+                )
 
 
 
@@ -50,6 +130,10 @@ view model =
     let
         page =
             case model.page of
+                LeaderBoardPage ->
+                    Html.map LeaderBoardMsg
+                        (LeaderBoard.view model.leaderBoard)
+
                 NotFound ->
                     div [ class "main" ]
                         [ h1 []
@@ -65,7 +149,7 @@ view model =
 pageHeader : Model -> Html Msg
 pageHeader model =
     header []
-        [ a [ href "#/" ] [ text "Race Results" ]
+        [ a [ onClick (Navigate LeaderBoardPage) ] [ text "Race Results" ]
         , ul []
             [ li []
                 [ a [ href "#" ] [ text "Link" ]
@@ -85,14 +169,10 @@ pageHeader model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
-
-
-main : Program Never Model Msg
-main =
-    Html.program
-        { init = init
-        , update = update
-        , view = view
-        , subscriptions = subscriptions
-        }
+    let
+        leaderBoardSub =
+            LeaderBoard.subscriptions model.leaderBoard
+    in
+        Sub.batch
+            [ Sub.map LeaderBoardMsg leaderBoardSub
+            ]
