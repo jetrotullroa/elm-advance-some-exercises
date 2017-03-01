@@ -9584,18 +9584,248 @@ var _user$project$LeaderBoard$view = function (model) {
 		});
 };
 
-var _user$project$Main$pageToHash = function (page) {
-	var _p0 = page;
-	if (_p0.ctor === 'LeaderBoardPage') {
-		return '/#';
+var _user$project$Login$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$Login$errorPanel = function (error) {
+	var _p0 = error;
+	if (_p0.ctor === 'Nothing') {
+		return _elm_lang$html$Html$text('');
 	} else {
-		return '#notfound';
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('error'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(_p0._0),
+				_1: {ctor: '[]'}
+			});
 	}
 };
-var _user$project$Main$Model = F2(
-	function (a, b) {
-		return {page: a, leaderBoard: b};
+var _user$project$Login$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'UsernameInput':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{username: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'PasswordInput':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{password: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Submit':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							error: _elm_lang$core$Maybe$Just(_p1._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
 	});
+var _user$project$Login$initModel = {username: '', password: '', error: _elm_lang$core$Maybe$Nothing};
+var _user$project$Login$init = {ctor: '_Tuple2', _0: _user$project$Login$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$Login$Model = F3(
+	function (a, b, c) {
+		return {username: a, password: b, error: c};
+	});
+var _user$project$Login$Error = function (a) {
+	return {ctor: 'Error', _0: a};
+};
+var _user$project$Login$Submit = {ctor: 'Submit'};
+var _user$project$Login$PasswordInput = function (a) {
+	return {ctor: 'PasswordInput', _0: a};
+};
+var _user$project$Login$UsernameInput = function (a) {
+	return {ctor: 'UsernameInput', _0: a};
+};
+var _user$project$Login$loginForm = function (model) {
+	return A2(
+		_elm_lang$html$Html$form,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('add-runner'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onSubmit(_user$project$Login$Submit),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$fieldset,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$legend,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Login'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$label,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('User Name'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$input,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$type_('text'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$value(model.username),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onInput(_user$project$Login$UsernameInput),
+													_1: {ctor: '[]'}
+												}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$label,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Password'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$input,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$type_('password'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$value(model.password),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onInput(_user$project$Login$PasswordInput),
+														_1: {ctor: '[]'}
+													}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$label,
+											{ctor: '[]'},
+											{ctor: '[]'}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$button,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$type_('submit'),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Login'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Login$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('main'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Login$errorPanel(model.error),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Login$loginForm(model),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+
+var _user$project$Main$pageToHash = function (page) {
+	var _p0 = page;
+	switch (_p0.ctor) {
+		case 'LeaderBoardPage':
+			return '/#';
+		case 'LoginPage':
+			return '#/login';
+		default:
+			return '#notfound';
+	}
+};
+var _user$project$Main$Model = F3(
+	function (a, b, c) {
+		return {page: a, leaderBoard: b, login: c};
+	});
+var _user$project$Main$LoginPage = {ctor: 'LoginPage'};
 var _user$project$Main$LeaderBoardPage = {ctor: 'LeaderBoardPage'};
 var _user$project$Main$NotFound = {ctor: 'NotFound'};
 var _user$project$Main$hashToPage = function (hash) {
@@ -9605,55 +9835,67 @@ var _user$project$Main$hashToPage = function (hash) {
 			return _user$project$Main$LeaderBoardPage;
 		case '#/leaderboard':
 			return _user$project$Main$LeaderBoardPage;
+		case '#/login':
+			return _user$project$Main$LoginPage;
 		case '':
 			return _user$project$Main$LeaderBoardPage;
 		default:
 			return _user$project$Main$NotFound;
 	}
 };
+var _user$project$Main$LoginMsg = function (a) {
+	return {ctor: 'LoginMsg', _0: a};
+};
 var _user$project$Main$LeaderBoardMsg = function (a) {
 	return {ctor: 'LeaderBoardMsg', _0: a};
 };
 var _user$project$Main$init = function (location) {
-	var _p2 = _user$project$LeaderBoard$init;
-	var leaderBoardInitModel = _p2._0;
-	var leaderBoardCmd = _p2._1;
+	var _p2 = _user$project$Login$init;
+	var loginInitModel = _p2._0;
+	var loginCmd = _p2._1;
+	var _p3 = _user$project$LeaderBoard$init;
+	var leaderBoardInitModel = _p3._0;
+	var leaderBoardCmd = _p3._1;
 	var cmds = _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',
 			_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LeaderBoardMsg, leaderBoardCmd),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LoginMsg, loginCmd),
+				_1: {ctor: '[]'}
+			}
 		});
 	var page = _user$project$Main$hashToPage(location.hash);
-	var initModel = {page: page, leaderBoard: leaderBoardInitModel};
+	var initModel = {page: page, leaderBoard: leaderBoardInitModel, login: loginInitModel};
 	return {ctor: '_Tuple2', _0: initModel, _1: cmds};
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p3 = msg;
-		switch (_p3.ctor) {
+		var _p4 = msg;
+		switch (_p4.ctor) {
 			case 'Navigate':
-				var _p4 = _p3._0;
+				var _p5 = _p4._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{page: _p4}),
+						{page: _p5}),
 					_1: _elm_lang$navigation$Navigation$newUrl(
-						_user$project$Main$pageToHash(_p4))
+						_user$project$Main$pageToHash(_p5))
 				};
 			case 'ChangePage':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{page: _p3._0}),
+						{page: _p4._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
-				var _p5 = A2(_user$project$LeaderBoard$update, _p3._0, model.leaderBoard);
-				var leaderBoardModel = _p5._0;
-				var cmd = _p5._1;
+			case 'LeaderBoardMsg':
+				var _p6 = A2(_user$project$LeaderBoard$update, _p4._0, model.leaderBoard);
+				var leaderBoardModel = _p6._0;
+				var cmd = _p6._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -9661,15 +9903,31 @@ var _user$project$Main$update = F2(
 						{leaderBoard: leaderBoardModel}),
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LeaderBoardMsg, cmd)
 				};
+			default:
+				var _p7 = A2(_user$project$Login$update, _p4._0, model.login);
+				var loginModel = _p7._0;
+				var cmd = _p7._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{login: loginModel}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LoginMsg, cmd)
+				};
 		}
 	});
 var _user$project$Main$subscriptions = function (model) {
+	var loginSub = _user$project$Login$subscriptions(model.login);
 	var leaderBoardSub = _user$project$LeaderBoard$subscriptions(model.leaderBoard);
 	return _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
 			_0: A2(_elm_lang$core$Platform_Sub$map, _user$project$Main$LeaderBoardMsg, leaderBoardSub),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A2(_elm_lang$core$Platform_Sub$map, _user$project$Main$LoginMsg, loginSub),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _user$project$Main$ChangePage = function (a) {
@@ -9745,7 +10003,8 @@ var _user$project$Main$pageHeader = function (model) {
 										_elm_lang$html$Html$a,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$href('#'),
+											_0: _elm_lang$html$Html_Events$onClick(
+												_user$project$Main$Navigate(_user$project$Main$LoginPage)),
 											_1: {ctor: '[]'}
 										},
 										{
@@ -9764,32 +10023,38 @@ var _user$project$Main$pageHeader = function (model) {
 };
 var _user$project$Main$view = function (model) {
 	var page = function () {
-		var _p6 = model.page;
-		if (_p6.ctor === 'LeaderBoardPage') {
-			return A2(
-				_elm_lang$html$Html$map,
-				_user$project$Main$LeaderBoardMsg,
-				_user$project$LeaderBoard$view(model.leaderBoard));
-		} else {
-			return A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('main'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$h1,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Page Not Found!'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				});
+		var _p8 = model.page;
+		switch (_p8.ctor) {
+			case 'LeaderBoardPage':
+				return A2(
+					_elm_lang$html$Html$map,
+					_user$project$Main$LeaderBoardMsg,
+					_user$project$LeaderBoard$view(model.leaderBoard));
+			case 'LoginPage':
+				return A2(
+					_elm_lang$html$Html$map,
+					_user$project$Main$LoginMsg,
+					_user$project$Login$view(model.login));
+			default:
+				return A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('main'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$h1,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Page Not Found!'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					});
 		}
 	}();
 	return A2(
