@@ -11,9 +11,9 @@ var _user$project$Main$pageToHash = function (page) {
 			return '#notfound';
 	}
 };
-var _user$project$Main$Model = F4(
-	function (a, b, c, d) {
-		return {page: a, leaderBoard: b, login: c, runner: d};
+var _user$project$Main$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {page: a, leaderBoard: b, login: c, runner: d, token: e, loggedin: f};
 	});
 var _user$project$Main$RunnerPage = {ctor: 'RunnerPage'};
 var _user$project$Main$LoginPage = {ctor: 'LoginPage'};
@@ -70,7 +70,7 @@ var _user$project$Main$init = function (location) {
 			}
 		});
 	var page = _user$project$Main$hashToPage(location.hash);
-	var initModel = {page: page, leaderBoard: leaderBoardInitModel, login: loginInitModel, runner: runnerInitModel};
+	var initModel = {page: page, leaderBoard: leaderBoardInitModel, login: loginInitModel, runner: runnerInitModel, token: _elm_lang$core$Maybe$Nothing, loggedin: false};
 	return {ctor: '_Tuple2', _0: initModel, _1: cmds};
 };
 var _user$project$Main$update = F2(
@@ -110,11 +110,13 @@ var _user$project$Main$update = F2(
 				var _p8 = A2(_user$project$Login$update, _p5._0, model.login);
 				var loginModel = _p8._0;
 				var cmd = _p8._1;
+				var token = _p8._2;
+				var loggedin = !_elm_lang$core$Native_Utils.eq(token, _elm_lang$core$Maybe$Nothing);
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{login: loginModel}),
+						{login: loginModel, token: token, loggedin: loggedin}),
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LoginMsg, cmd)
 				};
 			default:

@@ -82,6 +82,8 @@ type alias Model =
     , leaderBoard : LeaderBoard.Model
     , login : Login.Model
     , runner : Runner.Model
+    , token : Maybe String
+    , loggedin : Bool
     }
 
 
@@ -112,6 +114,8 @@ init location =
             , leaderBoard = leaderBoardInitModel
             , login = loginInitModel
             , runner = runnerInitModel
+            , token = Nothing
+            , loggedin = False
             }
 
         cmds =
@@ -156,10 +160,17 @@ update msg model =
 
         LoginMsg msg ->
             let
-                ( loginModel, cmd ) =
+                ( loginModel, cmd, token ) =
                     Login.update msg model.login
+
+                loggedin =
+                    token /= Nothing
             in
-                ( { model | login = loginModel }
+                ( { model
+                    | login = loginModel
+                    , token = token
+                    , loggedin = loggedin
+                  }
                 , Cmd.map LoginMsg cmd
                 )
 

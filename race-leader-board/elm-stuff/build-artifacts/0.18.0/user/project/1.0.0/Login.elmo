@@ -20,45 +20,113 @@ var _user$project$Login$errorPanel = function (error) {
 			});
 	}
 };
+var _user$project$Login$url = 'http://localhost:5000/authenticate';
+var _user$project$Login$initModel = {username: '', password: '', error: _elm_lang$core$Maybe$Nothing};
+var _user$project$Login$init = {ctor: '_Tuple2', _0: _user$project$Login$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$Login$Model = F3(
+	function (a, b, c) {
+		return {username: a, password: b, error: c};
+	});
+var _user$project$Login$LoginResponse = function (a) {
+	return {ctor: 'LoginResponse', _0: a};
+};
 var _user$project$Login$update = F2(
 	function (msg, model) {
 		var _p1 = msg;
 		switch (_p1.ctor) {
 			case 'UsernameInput':
 				return {
-					ctor: '_Tuple2',
+					ctor: '_Tuple3',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{username: _p1._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_1: _elm_lang$core$Platform_Cmd$none,
+					_2: _elm_lang$core$Maybe$Nothing
 				};
 			case 'PasswordInput':
 				return {
-					ctor: '_Tuple2',
+					ctor: '_Tuple3',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{password: _p1._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_1: _elm_lang$core$Platform_Cmd$none,
+					_2: _elm_lang$core$Maybe$Nothing
 				};
 			case 'Submit':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			default:
+				var decoder = A2(_elm_lang$core$Json_Decode$field, 'token', _elm_lang$core$Json_Decode$string);
+				var body = A2(
+					_elm_lang$http$Http$stringBody,
+					'application/json',
+					A2(
+						_elm_lang$core$Json_Encode$encode,
+						4,
+						_elm_lang$core$Json_Encode$object(
+							{
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'username',
+									_1: _elm_lang$core$Json_Encode$string(model.username)
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'password',
+										_1: _elm_lang$core$Json_Encode$string(model.password)
+									},
+									_1: {ctor: '[]'}
+								}
+							})));
+				var request = A3(_elm_lang$http$Http$post, _user$project$Login$url, body, decoder);
+				var cmd = A2(_elm_lang$http$Http$send, _user$project$Login$LoginResponse, request);
+				return {ctor: '_Tuple3', _0: model, _1: cmd, _2: _elm_lang$core$Maybe$Nothing};
+			case 'Error':
 				return {
-					ctor: '_Tuple2',
+					ctor: '_Tuple3',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							error: _elm_lang$core$Maybe$Just(_p1._0)
 						}),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_1: _elm_lang$core$Platform_Cmd$none,
+					_2: _elm_lang$core$Maybe$Nothing
 				};
+			default:
+				if (_p1._0.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple3',
+						_0: _user$project$Login$initModel,
+						_1: _elm_lang$navigation$Navigation$newUrl('/#'),
+						_2: _elm_lang$core$Maybe$Just(_p1._0._0)
+					};
+				} else {
+					var errMsg = function () {
+						var _p2 = _p1._0._0;
+						if (_p2.ctor === 'BadStatus') {
+							var _p4 = _p2._0;
+							var _p3 = _p4.status.code;
+							if (_p3 === 401) {
+								return _p4.body;
+							} else {
+								return _p4.status.message;
+							}
+						} else {
+							return 'Login Error!';
+						}
+					}();
+					return {
+						ctor: '_Tuple3',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								error: _elm_lang$core$Maybe$Just(errMsg)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none,
+						_2: _elm_lang$core$Maybe$Nothing
+					};
+				}
 		}
-	});
-var _user$project$Login$initModel = {username: '', password: '', error: _elm_lang$core$Maybe$Nothing};
-var _user$project$Login$init = {ctor: '_Tuple2', _0: _user$project$Login$initModel, _1: _elm_lang$core$Platform_Cmd$none};
-var _user$project$Login$Model = F3(
-	function (a, b, c) {
-		return {username: a, password: b, error: c};
 	});
 var _user$project$Login$Error = function (a) {
 	return {ctor: 'Error', _0: a};
