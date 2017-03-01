@@ -9810,6 +9810,398 @@ var _user$project$Login$view = function (model) {
 		});
 };
 
+var _user$project$Runner$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$Runner$errorPanel = function (error) {
+	var _p0 = error;
+	if (_p0.ctor === 'Nothing') {
+		return _elm_lang$html$Html$text('');
+	} else {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('error'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(_p0._0),
+				_1: {ctor: '[]'}
+			});
+	}
+};
+var _user$project$Runner$bibInput = F2(
+	function (model, bib) {
+		var bibInt = A2(
+			_elm_lang$core$Result$withDefault,
+			0,
+			_elm_lang$core$String$toInt(bib));
+		var bibError = (_elm_lang$core$Native_Utils.cmp(bibInt, 0) < 1) ? _elm_lang$core$Maybe$Just('Must Enter a Positive Number') : _elm_lang$core$Maybe$Nothing;
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{bib: bib, bibError: bibError}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
+	});
+var _user$project$Runner$ageInput = F2(
+	function (model, age) {
+		var ageInt = A2(
+			_elm_lang$core$Result$withDefault,
+			0,
+			_elm_lang$core$String$toInt(age));
+		var ageError = (_elm_lang$core$Native_Utils.cmp(ageInt, 0) < 1) ? _elm_lang$core$Maybe$Just('Must Enter a Positive Number') : _elm_lang$core$Maybe$Nothing;
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{age: age, ageError: ageError}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
+	});
+var _user$project$Runner$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'NameInput':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{name: _p1._0, nameError: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'LocationInput':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{location: _p1._0, locationError: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'AgeInput':
+				return A2(_user$project$Runner$ageInput, model, _p1._0);
+			case 'BibInput':
+				return A2(_user$project$Runner$bibInput, model, _p1._0);
+			default:
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
+var _user$project$Runner$initModel = {id: '', name: '', nameError: _elm_lang$core$Maybe$Nothing, location: '', locationError: _elm_lang$core$Maybe$Nothing, age: '', ageError: _elm_lang$core$Maybe$Nothing, bib: '', bibError: _elm_lang$core$Maybe$Nothing, error: _elm_lang$core$Maybe$Nothing};
+var _user$project$Runner$init = {ctor: '_Tuple2', _0: _user$project$Runner$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$Runner$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return {id: a, name: b, nameError: c, location: d, locationError: e, age: f, ageError: g, bib: h, bibError: i, error: j};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$Runner$Save = {ctor: 'Save'};
+var _user$project$Runner$BibInput = function (a) {
+	return {ctor: 'BibInput', _0: a};
+};
+var _user$project$Runner$AgeInput = function (a) {
+	return {ctor: 'AgeInput', _0: a};
+};
+var _user$project$Runner$LocationInput = function (a) {
+	return {ctor: 'LocationInput', _0: a};
+};
+var _user$project$Runner$NameInput = function (a) {
+	return {ctor: 'NameInput', _0: a};
+};
+var _user$project$Runner$viewForm = function (model) {
+	return A2(
+		_elm_lang$html$Html$form,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('add-runner'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onSubmit(_user$project$Runner$Save),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$fieldset,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$legend,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Add / Edit Runner'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$label,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Name'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$input,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$type_('text'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$value(model.name),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onInput(_user$project$Runner$NameInput),
+													_1: {ctor: '[]'}
+												}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$span,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text(
+													A2(_elm_lang$core$Maybe$withDefault, '', model.nameError)),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$label,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Location'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$input,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$type_('text'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$value(model.location),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onInput(_user$project$Runner$LocationInput),
+														_1: {ctor: '[]'}
+													}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$span,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(
+														A2(_elm_lang$core$Maybe$withDefault, '', model.locationError)),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$label,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Age'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$input,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$type_('text'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$value(model.age),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Events$onInput(_user$project$Runner$AgeInput),
+															_1: {ctor: '[]'}
+														}
+													}
+												},
+												{ctor: '[]'}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$span,
+													{ctor: '[]'},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text(
+															A2(_elm_lang$core$Maybe$withDefault, '', model.ageError)),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
+										}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$label,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Bib #'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$input,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$type_('text'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$value(model.bib),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Events$onInput(_user$project$Runner$BibInput),
+																_1: {ctor: '[]'}
+															}
+														}
+													},
+													{ctor: '[]'}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$span,
+														{ctor: '[]'},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text(
+																A2(_elm_lang$core$Maybe$withDefault, '', model.bibError)),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
+											}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$label,
+													{ctor: '[]'},
+													{ctor: '[]'}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$button,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$type_('submit'),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('Save'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Runner$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('main'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Runner$errorPanel(model.error),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Runner$viewForm(model),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+
 var _user$project$Main$pageToHash = function (page) {
 	var _p0 = page;
 	switch (_p0.ctor) {
@@ -9817,14 +10209,17 @@ var _user$project$Main$pageToHash = function (page) {
 			return '/#';
 		case 'LoginPage':
 			return '#/login';
+		case 'RunnerPage':
+			return '#/runner';
 		default:
 			return '#notfound';
 	}
 };
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {page: a, leaderBoard: b, login: c};
+var _user$project$Main$Model = F4(
+	function (a, b, c, d) {
+		return {page: a, leaderBoard: b, login: c, runner: d};
 	});
+var _user$project$Main$RunnerPage = {ctor: 'RunnerPage'};
 var _user$project$Main$LoginPage = {ctor: 'LoginPage'};
 var _user$project$Main$LeaderBoardPage = {ctor: 'LeaderBoardPage'};
 var _user$project$Main$NotFound = {ctor: 'NotFound'};
@@ -9837,11 +10232,16 @@ var _user$project$Main$hashToPage = function (hash) {
 			return _user$project$Main$LeaderBoardPage;
 		case '#/login':
 			return _user$project$Main$LoginPage;
+		case '#/runner':
+			return _user$project$Main$RunnerPage;
 		case '':
 			return _user$project$Main$LeaderBoardPage;
 		default:
 			return _user$project$Main$NotFound;
 	}
+};
+var _user$project$Main$RunnerMsg = function (a) {
+	return {ctor: 'RunnerMsg', _0: a};
 };
 var _user$project$Main$LoginMsg = function (a) {
 	return {ctor: 'LoginMsg', _0: a};
@@ -9850,12 +10250,15 @@ var _user$project$Main$LeaderBoardMsg = function (a) {
 	return {ctor: 'LeaderBoardMsg', _0: a};
 };
 var _user$project$Main$init = function (location) {
-	var _p2 = _user$project$Login$init;
-	var loginInitModel = _p2._0;
-	var loginCmd = _p2._1;
-	var _p3 = _user$project$LeaderBoard$init;
-	var leaderBoardInitModel = _p3._0;
-	var leaderBoardCmd = _p3._1;
+	var _p2 = _user$project$Runner$init;
+	var runnerInitModel = _p2._0;
+	var runnerCmd = _p2._1;
+	var _p3 = _user$project$Login$init;
+	var loginInitModel = _p3._0;
+	var loginCmd = _p3._1;
+	var _p4 = _user$project$LeaderBoard$init;
+	var leaderBoardInitModel = _p4._0;
+	var leaderBoardCmd = _p4._1;
 	var cmds = _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',
@@ -9863,39 +10266,43 @@ var _user$project$Main$init = function (location) {
 			_1: {
 				ctor: '::',
 				_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LoginMsg, loginCmd),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$RunnerMsg, runnerCmd),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 	var page = _user$project$Main$hashToPage(location.hash);
-	var initModel = {page: page, leaderBoard: leaderBoardInitModel, login: loginInitModel};
+	var initModel = {page: page, leaderBoard: leaderBoardInitModel, login: loginInitModel, runner: runnerInitModel};
 	return {ctor: '_Tuple2', _0: initModel, _1: cmds};
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p4 = msg;
-		switch (_p4.ctor) {
+		var _p5 = msg;
+		switch (_p5.ctor) {
 			case 'Navigate':
-				var _p5 = _p4._0;
+				var _p6 = _p5._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{page: _p5}),
+						{page: _p6}),
 					_1: _elm_lang$navigation$Navigation$newUrl(
-						_user$project$Main$pageToHash(_p5))
+						_user$project$Main$pageToHash(_p6))
 				};
 			case 'ChangePage':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{page: _p4._0}),
+						{page: _p5._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'LeaderBoardMsg':
-				var _p6 = A2(_user$project$LeaderBoard$update, _p4._0, model.leaderBoard);
-				var leaderBoardModel = _p6._0;
-				var cmd = _p6._1;
+				var _p7 = A2(_user$project$LeaderBoard$update, _p5._0, model.leaderBoard);
+				var leaderBoardModel = _p7._0;
+				var cmd = _p7._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -9903,16 +10310,27 @@ var _user$project$Main$update = F2(
 						{leaderBoard: leaderBoardModel}),
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LeaderBoardMsg, cmd)
 				};
-			default:
-				var _p7 = A2(_user$project$Login$update, _p4._0, model.login);
-				var loginModel = _p7._0;
-				var cmd = _p7._1;
+			case 'LoginMsg':
+				var _p8 = A2(_user$project$Login$update, _p5._0, model.login);
+				var loginModel = _p8._0;
+				var cmd = _p8._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{login: loginModel}),
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LoginMsg, cmd)
+				};
+			default:
+				var _p9 = A2(_user$project$Runner$update, _p5._0, model.runner);
+				var runnerModel = _p9._0;
+				var cmd = _p9._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{runner: runnerModel}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$RunnerMsg, cmd)
 				};
 		}
 	});
@@ -9975,12 +10393,13 @@ var _user$project$Main$pageHeader = function (model) {
 									_elm_lang$html$Html$a,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$href('#'),
+										_0: _elm_lang$html$Html_Events$onClick(
+											_user$project$Main$Navigate(_user$project$Main$RunnerPage)),
 										_1: {ctor: '[]'}
 									},
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html$text('Link'),
+										_0: _elm_lang$html$Html$text('Add Runner'),
 										_1: {ctor: '[]'}
 									}),
 								_1: {ctor: '[]'}
@@ -10023,8 +10442,8 @@ var _user$project$Main$pageHeader = function (model) {
 };
 var _user$project$Main$view = function (model) {
 	var page = function () {
-		var _p8 = model.page;
-		switch (_p8.ctor) {
+		var _p10 = model.page;
+		switch (_p10.ctor) {
 			case 'LeaderBoardPage':
 				return A2(
 					_elm_lang$html$Html$map,
@@ -10035,6 +10454,11 @@ var _user$project$Main$view = function (model) {
 					_elm_lang$html$Html$map,
 					_user$project$Main$LoginMsg,
 					_user$project$Login$view(model.login));
+			case 'RunnerPage':
+				return A2(
+					_elm_lang$html$Html$map,
+					_user$project$Main$RunnerMsg,
+					_user$project$Runner$view(model.runner));
 			default:
 				return A2(
 					_elm_lang$html$Html$div,

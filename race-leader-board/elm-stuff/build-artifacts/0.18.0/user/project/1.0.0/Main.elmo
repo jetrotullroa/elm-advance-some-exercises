@@ -5,14 +5,17 @@ var _user$project$Main$pageToHash = function (page) {
 			return '/#';
 		case 'LoginPage':
 			return '#/login';
+		case 'RunnerPage':
+			return '#/runner';
 		default:
 			return '#notfound';
 	}
 };
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {page: a, leaderBoard: b, login: c};
+var _user$project$Main$Model = F4(
+	function (a, b, c, d) {
+		return {page: a, leaderBoard: b, login: c, runner: d};
 	});
+var _user$project$Main$RunnerPage = {ctor: 'RunnerPage'};
 var _user$project$Main$LoginPage = {ctor: 'LoginPage'};
 var _user$project$Main$LeaderBoardPage = {ctor: 'LeaderBoardPage'};
 var _user$project$Main$NotFound = {ctor: 'NotFound'};
@@ -25,11 +28,16 @@ var _user$project$Main$hashToPage = function (hash) {
 			return _user$project$Main$LeaderBoardPage;
 		case '#/login':
 			return _user$project$Main$LoginPage;
+		case '#/runner':
+			return _user$project$Main$RunnerPage;
 		case '':
 			return _user$project$Main$LeaderBoardPage;
 		default:
 			return _user$project$Main$NotFound;
 	}
+};
+var _user$project$Main$RunnerMsg = function (a) {
+	return {ctor: 'RunnerMsg', _0: a};
 };
 var _user$project$Main$LoginMsg = function (a) {
 	return {ctor: 'LoginMsg', _0: a};
@@ -38,12 +46,15 @@ var _user$project$Main$LeaderBoardMsg = function (a) {
 	return {ctor: 'LeaderBoardMsg', _0: a};
 };
 var _user$project$Main$init = function (location) {
-	var _p2 = _user$project$Login$init;
-	var loginInitModel = _p2._0;
-	var loginCmd = _p2._1;
-	var _p3 = _user$project$LeaderBoard$init;
-	var leaderBoardInitModel = _p3._0;
-	var leaderBoardCmd = _p3._1;
+	var _p2 = _user$project$Runner$init;
+	var runnerInitModel = _p2._0;
+	var runnerCmd = _p2._1;
+	var _p3 = _user$project$Login$init;
+	var loginInitModel = _p3._0;
+	var loginCmd = _p3._1;
+	var _p4 = _user$project$LeaderBoard$init;
+	var leaderBoardInitModel = _p4._0;
+	var leaderBoardCmd = _p4._1;
 	var cmds = _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',
@@ -51,39 +62,43 @@ var _user$project$Main$init = function (location) {
 			_1: {
 				ctor: '::',
 				_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LoginMsg, loginCmd),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$RunnerMsg, runnerCmd),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 	var page = _user$project$Main$hashToPage(location.hash);
-	var initModel = {page: page, leaderBoard: leaderBoardInitModel, login: loginInitModel};
+	var initModel = {page: page, leaderBoard: leaderBoardInitModel, login: loginInitModel, runner: runnerInitModel};
 	return {ctor: '_Tuple2', _0: initModel, _1: cmds};
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p4 = msg;
-		switch (_p4.ctor) {
+		var _p5 = msg;
+		switch (_p5.ctor) {
 			case 'Navigate':
-				var _p5 = _p4._0;
+				var _p6 = _p5._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{page: _p5}),
+						{page: _p6}),
 					_1: _elm_lang$navigation$Navigation$newUrl(
-						_user$project$Main$pageToHash(_p5))
+						_user$project$Main$pageToHash(_p6))
 				};
 			case 'ChangePage':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{page: _p4._0}),
+						{page: _p5._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'LeaderBoardMsg':
-				var _p6 = A2(_user$project$LeaderBoard$update, _p4._0, model.leaderBoard);
-				var leaderBoardModel = _p6._0;
-				var cmd = _p6._1;
+				var _p7 = A2(_user$project$LeaderBoard$update, _p5._0, model.leaderBoard);
+				var leaderBoardModel = _p7._0;
+				var cmd = _p7._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -91,16 +106,27 @@ var _user$project$Main$update = F2(
 						{leaderBoard: leaderBoardModel}),
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LeaderBoardMsg, cmd)
 				};
-			default:
-				var _p7 = A2(_user$project$Login$update, _p4._0, model.login);
-				var loginModel = _p7._0;
-				var cmd = _p7._1;
+			case 'LoginMsg':
+				var _p8 = A2(_user$project$Login$update, _p5._0, model.login);
+				var loginModel = _p8._0;
+				var cmd = _p8._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{login: loginModel}),
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LoginMsg, cmd)
+				};
+			default:
+				var _p9 = A2(_user$project$Runner$update, _p5._0, model.runner);
+				var runnerModel = _p9._0;
+				var cmd = _p9._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{runner: runnerModel}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$RunnerMsg, cmd)
 				};
 		}
 	});
@@ -163,12 +189,13 @@ var _user$project$Main$pageHeader = function (model) {
 									_elm_lang$html$Html$a,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$href('#'),
+										_0: _elm_lang$html$Html_Events$onClick(
+											_user$project$Main$Navigate(_user$project$Main$RunnerPage)),
 										_1: {ctor: '[]'}
 									},
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html$text('Link'),
+										_0: _elm_lang$html$Html$text('Add Runner'),
 										_1: {ctor: '[]'}
 									}),
 								_1: {ctor: '[]'}
@@ -211,8 +238,8 @@ var _user$project$Main$pageHeader = function (model) {
 };
 var _user$project$Main$view = function (model) {
 	var page = function () {
-		var _p8 = model.page;
-		switch (_p8.ctor) {
+		var _p10 = model.page;
+		switch (_p10.ctor) {
 			case 'LeaderBoardPage':
 				return A2(
 					_elm_lang$html$Html$map,
@@ -223,6 +250,11 @@ var _user$project$Main$view = function (model) {
 					_elm_lang$html$Html$map,
 					_user$project$Main$LoginMsg,
 					_user$project$Login$view(model.login));
+			case 'RunnerPage':
+				return A2(
+					_elm_lang$html$Html$map,
+					_user$project$Main$RunnerMsg,
+					_user$project$Runner$view(model.runner));
 			default:
 				return A2(
 					_elm_lang$html$Html$div,
