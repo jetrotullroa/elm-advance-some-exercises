@@ -9603,6 +9603,8 @@ var _user$project$Main$hashToPage = function (hash) {
 	switch (_p1) {
 		case '/#':
 			return _user$project$Main$LeaderBoardPage;
+		case '#/leaderboard':
+			return _user$project$Main$LeaderBoardPage;
 		case '':
 			return _user$project$Main$LeaderBoardPage;
 		default:

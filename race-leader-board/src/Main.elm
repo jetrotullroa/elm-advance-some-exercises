@@ -41,6 +41,9 @@ hashToPage hash =
         "/#" ->
             LeaderBoardPage
 
+        "#/leaderboard" ->
+            LeaderBoardPage
+
         "" ->
             LeaderBoardPage
 
