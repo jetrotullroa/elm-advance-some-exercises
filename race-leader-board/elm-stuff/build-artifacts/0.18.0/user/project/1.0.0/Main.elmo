@@ -11,6 +11,14 @@ var _user$project$Main$pageToHash = function (page) {
 			return '#notfound';
 	}
 };
+var _user$project$Main$saveToken = _elm_lang$core$Native_Platform.outgoingPort(
+	'saveToken',
+	function (v) {
+		return v;
+	});
+var _user$project$Main$Flags = function (a) {
+	return {token: a};
+};
 var _user$project$Main$Model = F6(
 	function (a, b, c, d, e, f) {
 		return {page: a, leaderBoard: b, login: c, runner: d, token: e, loggedin: f};
@@ -45,34 +53,42 @@ var _user$project$Main$LoginMsg = function (a) {
 var _user$project$Main$LeaderBoardMsg = function (a) {
 	return {ctor: 'LeaderBoardMsg', _0: a};
 };
-var _user$project$Main$init = function (location) {
-	var _p2 = _user$project$Runner$init;
-	var runnerInitModel = _p2._0;
-	var runnerCmd = _p2._1;
-	var _p3 = _user$project$Login$init;
-	var loginInitModel = _p3._0;
-	var loginCmd = _p3._1;
-	var _p4 = _user$project$LeaderBoard$init;
-	var leaderBoardInitModel = _p4._0;
-	var leaderBoardCmd = _p4._1;
-	var cmds = _elm_lang$core$Platform_Cmd$batch(
-		{
-			ctor: '::',
-			_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LeaderBoardMsg, leaderBoardCmd),
-			_1: {
+var _user$project$Main$init = F2(
+	function (flags, location) {
+		var _p2 = _user$project$Runner$init;
+		var runnerInitModel = _p2._0;
+		var runnerCmd = _p2._1;
+		var _p3 = _user$project$Login$init;
+		var loginInitModel = _p3._0;
+		var loginCmd = _p3._1;
+		var _p4 = _user$project$LeaderBoard$init;
+		var leaderBoardInitModel = _p4._0;
+		var leaderBoardCmd = _p4._1;
+		var cmds = _elm_lang$core$Platform_Cmd$batch(
+			{
 				ctor: '::',
-				_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LoginMsg, loginCmd),
+				_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LeaderBoardMsg, leaderBoardCmd),
 				_1: {
 					ctor: '::',
-					_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$RunnerMsg, runnerCmd),
-					_1: {ctor: '[]'}
+					_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LoginMsg, loginCmd),
+					_1: {
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$RunnerMsg, runnerCmd),
+						_1: {ctor: '[]'}
+					}
 				}
-			}
-		});
-	var page = _user$project$Main$hashToPage(location.hash);
-	var initModel = {page: page, leaderBoard: leaderBoardInitModel, login: loginInitModel, runner: runnerInitModel, token: _elm_lang$core$Maybe$Nothing, loggedin: false};
-	return {ctor: '_Tuple2', _0: initModel, _1: cmds};
-};
+			});
+		var page = _user$project$Main$hashToPage(location.hash);
+		var initModel = {
+			page: page,
+			leaderBoard: leaderBoardInitModel,
+			login: loginInitModel,
+			runner: runnerInitModel,
+			token: flags.token,
+			loggedin: !_elm_lang$core$Native_Utils.eq(flags.token, _elm_lang$core$Maybe$Nothing)
+		};
+		return {ctor: '_Tuple2', _0: initModel, _1: cmds};
+	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p5 = msg;
@@ -112,17 +128,34 @@ var _user$project$Main$update = F2(
 				var cmd = _p8._1;
 				var token = _p8._2;
 				var loggedin = !_elm_lang$core$Native_Utils.eq(token, _elm_lang$core$Maybe$Nothing);
+				var saveTokenCmd = function () {
+					var _p9 = token;
+					if (_p9.ctor === 'Just') {
+						return _user$project$Main$saveToken(_p9._0);
+					} else {
+						return _elm_lang$core$Platform_Cmd$none;
+					}
+				}();
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{login: loginModel, token: token, loggedin: loggedin}),
-					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LoginMsg, cmd)
+					_1: _elm_lang$core$Platform_Cmd$batch(
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LoginMsg, cmd),
+							_1: {
+								ctor: '::',
+								_0: saveTokenCmd,
+								_1: {ctor: '[]'}
+							}
+						})
 				};
 			default:
-				var _p9 = A2(_user$project$Runner$update, _p5._0, model.runner);
-				var runnerModel = _p9._0;
-				var cmd = _p9._1;
+				var _p10 = A2(_user$project$Runner$update, _p5._0, model.runner);
+				var runnerModel = _p10._0;
+				var cmd = _p10._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -133,6 +166,7 @@ var _user$project$Main$update = F2(
 		}
 	});
 var _user$project$Main$subscriptions = function (model) {
+	var runnerSub = _user$project$Runner$subscriptions(model.runner);
 	var loginSub = _user$project$Login$subscriptions(model.login);
 	var leaderBoardSub = _user$project$LeaderBoard$subscriptions(model.leaderBoard);
 	return _elm_lang$core$Platform_Sub$batch(
@@ -142,7 +176,11 @@ var _user$project$Main$subscriptions = function (model) {
 			_1: {
 				ctor: '::',
 				_0: A2(_elm_lang$core$Platform_Sub$map, _user$project$Main$LoginMsg, loginSub),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$core$Platform_Sub$map, _user$project$Main$RunnerMsg, runnerSub),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
@@ -240,8 +278,8 @@ var _user$project$Main$pageHeader = function (model) {
 };
 var _user$project$Main$view = function (model) {
 	var page = function () {
-		var _p10 = model.page;
-		switch (_p10.ctor) {
+		var _p11 = model.page;
+		switch (_p11.ctor) {
 			case 'LeaderBoardPage':
 				return A2(
 					_elm_lang$html$Html$map,
@@ -293,6 +331,25 @@ var _user$project$Main$view = function (model) {
 		});
 };
 var _user$project$Main$main = A2(
-	_elm_lang$navigation$Navigation$program,
+	_elm_lang$navigation$Navigation$programWithFlags,
 	_user$project$Main$locationToMsg,
-	{init: _user$project$Main$init, update: _user$project$Main$update, view: _user$project$Main$view, subscriptions: _user$project$Main$subscriptions})();
+	{init: _user$project$Main$init, update: _user$project$Main$update, view: _user$project$Main$view, subscriptions: _user$project$Main$subscriptions})(
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (token) {
+			return _elm_lang$core$Json_Decode$succeed(
+				{token: token});
+		},
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'token',
+			_elm_lang$core$Json_Decode$oneOf(
+				{
+					ctor: '::',
+					_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+					_1: {
+						ctor: '::',
+						_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, _elm_lang$core$Json_Decode$string),
+						_1: {ctor: '[]'}
+					}
+				}))));

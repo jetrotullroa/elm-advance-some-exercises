@@ -12,9 +12,14 @@ import Runner
 -- Main
 
 
-main : Program Never Model Msg
+type alias Flags =
+    { token : Maybe String
+    }
+
+
+main : Program Flags Model Msg
 main =
-    Navigation.program locationToMsg
+    Navigation.programWithFlags locationToMsg
         { init = init
         , update = update
         , view = view
@@ -94,8 +99,8 @@ type Page
     | RunnerPage
 
 
-init : Navigation.Location -> ( Model, Cmd Msg )
-init location =
+init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
+init flags location =
     let
         page =
             hashToPage location.hash
@@ -114,8 +119,8 @@ init location =
             , leaderBoard = leaderBoardInitModel
             , login = loginInitModel
             , runner = runnerInitModel
-            , token = Nothing
-            , loggedin = False
+            , token = flags.token
+            , loggedin = flags.token /= Nothing
             }
 
         cmds =
@@ -165,13 +170,24 @@ update msg model =
 
                 loggedin =
                     token /= Nothing
+
+                saveTokenCmd =
+                    case token of
+                        Just jwt ->
+                            saveToken jwt
+
+                        Nothing ->
+                            Cmd.none
             in
                 ( { model
                     | login = loginModel
                     , token = token
                     , loggedin = loggedin
                   }
-                , Cmd.map LoginMsg cmd
+                , Cmd.batch
+                    [ Cmd.map LoginMsg cmd
+                    , saveTokenCmd
+                    ]
                 )
 
         RunnerMsg msg ->
@@ -246,8 +262,15 @@ subscriptions model =
 
         loginSub =
             Login.subscriptions model.login
+
+        runnerSub =
+            Runner.subscriptions model.runner
     in
         Sub.batch
             [ Sub.map LeaderBoardMsg leaderBoardSub
             , Sub.map LoginMsg loginSub
+            , Sub.map RunnerMsg runnerSub
             ]
+
+
+port saveToken : String -> Cmd msg
