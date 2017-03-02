@@ -142,6 +142,7 @@ type Msg
     | ChangePage Page
     | LeaderBoardMsg LeaderBoard.Msg
     | LoginMsg Login.Msg
+    | LogoutMsg
     | RunnerMsg Runner.Msg
 
 
@@ -190,6 +191,14 @@ update msg model =
                     ]
                 )
 
+        LogoutMsg ->
+            ( { model
+                | token = Nothing
+                , loggedin = False
+              }
+            , deleteToken ()
+            )
+
         RunnerMsg msg ->
             let
                 ( runnerModel, cmd ) =
@@ -233,6 +242,14 @@ view model =
             ]
 
 
+authLogin : Model -> Html Msg
+authLogin model =
+    if model.loggedin == True then
+        a [ onClick LogoutMsg ] [ text "Logout" ]
+    else
+        a [ onClick (Navigate LoginPage) ] [ text "Login" ]
+
+
 pageHeader : Model -> Html Msg
 pageHeader model =
     header []
@@ -244,8 +261,7 @@ pageHeader model =
             ]
         , ul []
             [ li []
-                [ a [ onClick (Navigate LoginPage) ] [ text "Login" ]
-                ]
+                [ authLogin model ]
             ]
         ]
 
@@ -274,3 +290,6 @@ subscriptions model =
 
 
 port saveToken : String -> Cmd msg
+
+
+port deleteToken : () -> Cmd msg

@@ -14608,6 +14608,11 @@ var _user$project$Main$saveToken = _elm_lang$core$Native_Platform.outgoingPort(
 	function (v) {
 		return v;
 	});
+var _user$project$Main$deleteToken = _elm_lang$core$Native_Platform.outgoingPort(
+	'deleteToken',
+	function (v) {
+		return null;
+	});
 var _user$project$Main$Flags = function (a) {
 	return {token: a};
 };
@@ -14639,6 +14644,7 @@ var _user$project$Main$hashToPage = function (hash) {
 var _user$project$Main$RunnerMsg = function (a) {
 	return {ctor: 'RunnerMsg', _0: a};
 };
+var _user$project$Main$LogoutMsg = {ctor: 'LogoutMsg'};
 var _user$project$Main$LoginMsg = function (a) {
 	return {ctor: 'LoginMsg', _0: a};
 };
@@ -14744,6 +14750,15 @@ var _user$project$Main$update = F2(
 							}
 						})
 				};
+			case 'LogoutMsg':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{token: _elm_lang$core$Maybe$Nothing, loggedin: false}),
+					_1: _user$project$Main$deleteToken(
+						{ctor: '_Tuple0'})
+				};
 			default:
 				var _p10 = A2(_user$project$Runner$update, _p5._0, model.runner);
 				var runnerModel = _p10._0;
@@ -14785,6 +14800,32 @@ var _user$project$Main$locationToMsg = function (location) {
 };
 var _user$project$Main$Navigate = function (a) {
 	return {ctor: 'Navigate', _0: a};
+};
+var _user$project$Main$authLogin = function (model) {
+	return _elm_lang$core$Native_Utils.eq(model.loggedin, true) ? A2(
+		_elm_lang$html$Html$a,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$LogoutMsg),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Logout'),
+			_1: {ctor: '[]'}
+		}) : A2(
+		_elm_lang$html$Html$a,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(
+				_user$project$Main$Navigate(_user$project$Main$LoginPage)),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Login'),
+			_1: {ctor: '[]'}
+		});
 };
 var _user$project$Main$pageHeader = function (model) {
 	return A2(
@@ -14846,19 +14887,7 @@ var _user$project$Main$pageHeader = function (model) {
 								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$a,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onClick(
-												_user$project$Main$Navigate(_user$project$Main$LoginPage)),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Login'),
-											_1: {ctor: '[]'}
-										}),
+									_0: _user$project$Main$authLogin(model),
 									_1: {ctor: '[]'}
 								}),
 							_1: {ctor: '[]'}
@@ -14949,7 +14978,7 @@ var _user$project$Main$main = A2(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Login.Msg":{"args":[],"tags":{"UsernameInput":["String"],"Error":["String"],"Submit":[],"LoginResponse":["Result.Result Http.Error String"],"PasswordInput":["String"]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Runner.Msg":{"args":[],"tags":{"BibInput":["String"],"AgeInput":["String"],"LocationInput":["String"],"NameInput":["String"],"Save":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"LeaderBoard.Msg":{"args":[],"tags":{"SearchInput":["String"],"Search":[]}},"Main.Msg":{"args":[],"tags":{"LoginMsg":["Login.Msg"],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"LeaderBoardMsg":["LeaderBoard.Msg"],"RunnerMsg":["Runner.Msg"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Main.Page":{"args":[],"tags":{"LeaderBoardPage":[],"NotFound":[],"LoginPage":[],"RunnerPage":[]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Login.Msg":{"args":[],"tags":{"UsernameInput":["String"],"Error":["String"],"Submit":[],"LoginResponse":["Result.Result Http.Error String"],"PasswordInput":["String"]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Runner.Msg":{"args":[],"tags":{"BibInput":["String"],"AgeInput":["String"],"LocationInput":["String"],"NameInput":["String"],"Save":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"LeaderBoard.Msg":{"args":[],"tags":{"SearchInput":["String"],"Search":[]}},"Main.Msg":{"args":[],"tags":{"LoginMsg":["Login.Msg"],"LogoutMsg":[],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"LeaderBoardMsg":["LeaderBoard.Msg"],"RunnerMsg":["Runner.Msg"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Main.Page":{"args":[],"tags":{"LeaderBoardPage":[],"NotFound":[],"LoginPage":[],"RunnerPage":[]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
