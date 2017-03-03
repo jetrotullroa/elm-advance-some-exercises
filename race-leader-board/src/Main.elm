@@ -42,7 +42,7 @@ pageToHash page =
             "#/login"
 
         RunnerPage ->
-            "#/runner"
+            "#/add"
 
         NotFound ->
             "#notfound"
@@ -60,7 +60,7 @@ hashToPage hash =
         "#/login" ->
             LoginPage
 
-        "#/runner" ->
+        "#/add" ->
             RunnerPage
 
         "" ->
@@ -99,11 +99,22 @@ type Page
     | RunnerPage
 
 
+authPages : List Page
+authPages =
+    [ RunnerPage ]
+
+
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
     let
         page =
             hashToPage location.hash
+
+        loggedin =
+            flags.token /= Nothing
+
+        ( updatedPage, cmd ) =
+            authRedirect page loggedin
 
         ( leaderBoardInitModel, leaderBoardCmd ) =
             LeaderBoard.init
@@ -115,12 +126,12 @@ init flags location =
             Runner.init
 
         initModel =
-            { page = page
+            { page = updatedPage
             , leaderBoard = leaderBoardInitModel
             , login = loginInitModel
             , runner = runnerInitModel
             , token = flags.token
-            , loggedin = flags.token /= Nothing
+            , loggedin = loggedin
             }
 
         cmds =
@@ -128,6 +139,7 @@ init flags location =
                 [ Cmd.map LeaderBoardMsg leaderBoardCmd
                 , Cmd.map LoginMsg loginCmd
                 , Cmd.map RunnerMsg runnerCmd
+                , cmd
                 ]
     in
         ( initModel, cmds )
@@ -153,7 +165,11 @@ update msg model =
             ( { model | page = page }, Navigation.newUrl <| pageToHash page )
 
         ChangePage page ->
-            ( { model | page = page }, Cmd.none )
+            let
+                ( updatedPage, cmd ) =
+                    authRedirect page model.loggedin
+            in
+                ( { model | page = updatedPage }, cmd )
 
         LeaderBoardMsg msg ->
             let
@@ -196,17 +212,33 @@ update msg model =
                 | token = Nothing
                 , loggedin = False
               }
-            , deleteToken ()
+            , Cmd.batch
+                [ deleteToken ()
+                , Navigation.modifyUrl <| pageToHash LeaderBoardPage
+                ]
             )
 
         RunnerMsg msg ->
             let
                 ( runnerModel, cmd ) =
-                    Runner.update msg model.runner
+                    Runner.update (Maybe.withDefault "" model.token) msg model.runner
             in
                 ( { model | runner = runnerModel }
                 , Cmd.map RunnerMsg cmd
                 )
+
+
+authForPage : Page -> Bool -> Bool
+authForPage page loggedin =
+    loggedin || not (List.member page authPages)
+
+
+authRedirect : Page -> Bool -> ( Page, Cmd Msg )
+authRedirect page loggedin =
+    if authForPage page loggedin then
+        ( page, Cmd.none )
+    else
+        ( LoginPage, Navigation.modifyUrl <| pageToHash LoginPage )
 
 
 
@@ -243,11 +275,19 @@ view model =
 
 
 authLogin : Model -> Html Msg
-authLogin model =
-    if model.loggedin == True then
+authLogin { loggedin } =
+    if loggedin then
         a [ onClick LogoutMsg ] [ text "Logout" ]
     else
         a [ onClick (Navigate LoginPage) ] [ text "Login" ]
+
+
+addRunnerview : Model -> Html Msg
+addRunnerview { loggedin } =
+    if loggedin then
+        a [ onClick (Navigate RunnerPage) ] [ text "Add Runner" ]
+    else
+        text ""
 
 
 pageHeader : Model -> Html Msg
@@ -256,8 +296,7 @@ pageHeader model =
         [ a [ onClick (Navigate LeaderBoardPage) ] [ text "Race Results" ]
         , ul []
             [ li []
-                [ a [ onClick (Navigate RunnerPage) ] [ text "Add Runner" ]
-                ]
+                [ addRunnerview model ]
             ]
         , ul []
             [ li []

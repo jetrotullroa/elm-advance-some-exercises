@@ -50,34 +50,118 @@ var _user$project$Runner$ageInput = F2(
 			_1: _elm_lang$core$Platform_Cmd$none
 		};
 	});
-var _user$project$Runner$update = F2(
-	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
-			case 'NameInput':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{name: _p1._0, nameError: _elm_lang$core$Maybe$Nothing}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'LocationInput':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{location: _p1._0, locationError: _elm_lang$core$Maybe$Nothing}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'AgeInput':
-				return A2(_user$project$Runner$ageInput, model, _p1._0);
-			case 'BibInput':
-				return A2(_user$project$Runner$bibInput, model, _p1._0);
-			default:
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-		}
+var _user$project$Runner$validateBib = function (model) {
+	var bibInt = A2(
+		_elm_lang$core$Result$withDefault,
+		0,
+		_elm_lang$core$String$toInt(model.bib));
+	return (_elm_lang$core$Native_Utils.cmp(bibInt, 0) < 1) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			bibError: _elm_lang$core$Maybe$Just('Bib Must be a positive number')
+		}) : _elm_lang$core$Native_Utils.update(
+		model,
+		{bibError: _elm_lang$core$Maybe$Nothing});
+};
+var _user$project$Runner$validateAge = function (model) {
+	var ageInt = A2(
+		_elm_lang$core$Result$withDefault,
+		0,
+		_elm_lang$core$String$toInt(model.age));
+	return (_elm_lang$core$Native_Utils.cmp(ageInt, 0) < 1) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			ageError: _elm_lang$core$Maybe$Just('Age Must be a positive number')
+		}) : _elm_lang$core$Native_Utils.update(
+		model,
+		{ageError: _elm_lang$core$Maybe$Nothing});
+};
+var _user$project$Runner$validateLocation = function (model) {
+	return _elm_lang$core$String$isEmpty(model.location) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			locationError: _elm_lang$core$Maybe$Just('Cannot be blank')
+		}) : _elm_lang$core$Native_Utils.update(
+		model,
+		{locationError: _elm_lang$core$Maybe$Nothing});
+};
+var _user$project$Runner$validateName = function (model) {
+	return _elm_lang$core$String$isEmpty(model.name) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			nameError: _elm_lang$core$Maybe$Just('Cannot be blank')
+		}) : _elm_lang$core$Native_Utils.update(
+		model,
+		{nameError: _elm_lang$core$Maybe$Nothing});
+};
+var _user$project$Runner$validate = function (model) {
+	return _user$project$Runner$validateBib(
+		_user$project$Runner$validateAge(
+			_user$project$Runner$validateLocation(
+				_user$project$Runner$validateName(model))));
+};
+var _user$project$Runner$post = F4(
+	function (url, headers, body, decoder) {
+		return _elm_lang$http$Http$request(
+			{
+				method: 'POST',
+				headers: headers,
+				url: url,
+				body: body,
+				expect: _elm_lang$http$Http$expectJson(decoder),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
 	});
+var _user$project$Runner$runnerEncoder = function (_p1) {
+	var _p2 = _p1;
+	var bibInt = A2(
+		_elm_lang$core$Result$withDefault,
+		0,
+		_elm_lang$core$String$toInt(_p2.bib));
+	var ageInt = A2(
+		_elm_lang$core$Result$withDefault,
+		0,
+		_elm_lang$core$String$toInt(_p2.age));
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'name',
+				_1: _elm_lang$core$Json_Encode$string(_p2.name)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'location',
+					_1: _elm_lang$core$Json_Encode$string(_p2.location)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'age',
+						_1: _elm_lang$core$Json_Encode$int(ageInt)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'bib',
+							_1: _elm_lang$core$Json_Encode$int(bibInt)
+						},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$Runner$url = 'http://localhost:5000/runner';
+var _user$project$Runner$isValid = function (model) {
+	return _elm_lang$core$Native_Utils.eq(model.nameError, _elm_lang$core$Maybe$Nothing) && (_elm_lang$core$Native_Utils.eq(model.locationError, _elm_lang$core$Maybe$Nothing) && (_elm_lang$core$Native_Utils.eq(model.ageError, _elm_lang$core$Maybe$Nothing) && _elm_lang$core$Native_Utils.eq(model.bibError, _elm_lang$core$Maybe$Nothing)));
+};
 var _user$project$Runner$initModel = {id: '', name: '', nameError: _elm_lang$core$Maybe$Nothing, location: '', locationError: _elm_lang$core$Maybe$Nothing, age: '', ageError: _elm_lang$core$Maybe$Nothing, bib: '', bibError: _elm_lang$core$Maybe$Nothing, error: _elm_lang$core$Maybe$Nothing};
 var _user$project$Runner$init = {ctor: '_Tuple2', _0: _user$project$Runner$initModel, _1: _elm_lang$core$Platform_Cmd$none};
 var _user$project$Runner$Model = function (a) {
@@ -101,6 +185,77 @@ var _user$project$Runner$Model = function (a) {
 		};
 	};
 };
+var _user$project$Runner$SaveResponse = function (a) {
+	return {ctor: 'SaveResponse', _0: a};
+};
+var _user$project$Runner$save = F2(
+	function (token, model) {
+		var decoder = A2(_elm_lang$core$Json_Decode$field, '_id', _elm_lang$core$Json_Decode$string);
+		var body = _elm_lang$http$Http$jsonBody(
+			_user$project$Runner$runnerEncoder(model));
+		var headers = {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$http$Http$header,
+				'Authorization',
+				A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', token)),
+			_1: {ctor: '[]'}
+		};
+		var request = A4(_user$project$Runner$post, _user$project$Runner$url, headers, body, decoder);
+		var cmd = A2(_elm_lang$http$Http$send, _user$project$Runner$SaveResponse, request);
+		return {ctor: '_Tuple2', _0: model, _1: cmd};
+	});
+var _user$project$Runner$update = F3(
+	function (token, msg, model) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
+			case 'NameInput':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{name: _p3._0, nameError: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'LocationInput':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{location: _p3._0, locationError: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'AgeInput':
+				return A2(_user$project$Runner$ageInput, model, _p3._0);
+			case 'BibInput':
+				return A2(_user$project$Runner$bibInput, model, _p3._0);
+			case 'Save':
+				var updatedModel = _user$project$Runner$validate(model);
+				return _user$project$Runner$isValid(updatedModel) ? A2(_user$project$Runner$save, token, updatedModel) : {ctor: '_Tuple2', _0: updatedModel, _1: _elm_lang$core$Platform_Cmd$none};
+			default:
+				if (_p3._0.ctor === 'Ok') {
+					return {ctor: '_Tuple2', _0: _user$project$Runner$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+				} else {
+					var errMsg = function () {
+						var _p4 = _p3._0._0;
+						if (_p4.ctor === 'BadStatus') {
+							return _p4._0.body;
+						} else {
+							return 'Error Saving!';
+						}
+					}();
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								error: _elm_lang$core$Maybe$Just(errMsg)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+		}
+	});
 var _user$project$Runner$Save = {ctor: 'Save'};
 var _user$project$Runner$BibInput = function (a) {
 	return {ctor: 'BibInput', _0: a};

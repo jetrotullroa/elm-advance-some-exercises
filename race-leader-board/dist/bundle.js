@@ -14250,34 +14250,118 @@ var _user$project$Runner$ageInput = F2(
 			_1: _elm_lang$core$Platform_Cmd$none
 		};
 	});
-var _user$project$Runner$update = F2(
-	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
-			case 'NameInput':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{name: _p1._0, nameError: _elm_lang$core$Maybe$Nothing}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'LocationInput':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{location: _p1._0, locationError: _elm_lang$core$Maybe$Nothing}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'AgeInput':
-				return A2(_user$project$Runner$ageInput, model, _p1._0);
-			case 'BibInput':
-				return A2(_user$project$Runner$bibInput, model, _p1._0);
-			default:
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-		}
+var _user$project$Runner$validateBib = function (model) {
+	var bibInt = A2(
+		_elm_lang$core$Result$withDefault,
+		0,
+		_elm_lang$core$String$toInt(model.bib));
+	return (_elm_lang$core$Native_Utils.cmp(bibInt, 0) < 1) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			bibError: _elm_lang$core$Maybe$Just('Bib Must be a positive number')
+		}) : _elm_lang$core$Native_Utils.update(
+		model,
+		{bibError: _elm_lang$core$Maybe$Nothing});
+};
+var _user$project$Runner$validateAge = function (model) {
+	var ageInt = A2(
+		_elm_lang$core$Result$withDefault,
+		0,
+		_elm_lang$core$String$toInt(model.age));
+	return (_elm_lang$core$Native_Utils.cmp(ageInt, 0) < 1) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			ageError: _elm_lang$core$Maybe$Just('Age Must be a positive number')
+		}) : _elm_lang$core$Native_Utils.update(
+		model,
+		{ageError: _elm_lang$core$Maybe$Nothing});
+};
+var _user$project$Runner$validateLocation = function (model) {
+	return _elm_lang$core$String$isEmpty(model.location) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			locationError: _elm_lang$core$Maybe$Just('Cannot be blank')
+		}) : _elm_lang$core$Native_Utils.update(
+		model,
+		{locationError: _elm_lang$core$Maybe$Nothing});
+};
+var _user$project$Runner$validateName = function (model) {
+	return _elm_lang$core$String$isEmpty(model.name) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			nameError: _elm_lang$core$Maybe$Just('Cannot be blank')
+		}) : _elm_lang$core$Native_Utils.update(
+		model,
+		{nameError: _elm_lang$core$Maybe$Nothing});
+};
+var _user$project$Runner$validate = function (model) {
+	return _user$project$Runner$validateBib(
+		_user$project$Runner$validateAge(
+			_user$project$Runner$validateLocation(
+				_user$project$Runner$validateName(model))));
+};
+var _user$project$Runner$post = F4(
+	function (url, headers, body, decoder) {
+		return _elm_lang$http$Http$request(
+			{
+				method: 'POST',
+				headers: headers,
+				url: url,
+				body: body,
+				expect: _elm_lang$http$Http$expectJson(decoder),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
 	});
+var _user$project$Runner$runnerEncoder = function (_p1) {
+	var _p2 = _p1;
+	var bibInt = A2(
+		_elm_lang$core$Result$withDefault,
+		0,
+		_elm_lang$core$String$toInt(_p2.bib));
+	var ageInt = A2(
+		_elm_lang$core$Result$withDefault,
+		0,
+		_elm_lang$core$String$toInt(_p2.age));
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'name',
+				_1: _elm_lang$core$Json_Encode$string(_p2.name)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'location',
+					_1: _elm_lang$core$Json_Encode$string(_p2.location)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'age',
+						_1: _elm_lang$core$Json_Encode$int(ageInt)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'bib',
+							_1: _elm_lang$core$Json_Encode$int(bibInt)
+						},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$Runner$url = 'http://localhost:5000/runner';
+var _user$project$Runner$isValid = function (model) {
+	return _elm_lang$core$Native_Utils.eq(model.nameError, _elm_lang$core$Maybe$Nothing) && (_elm_lang$core$Native_Utils.eq(model.locationError, _elm_lang$core$Maybe$Nothing) && (_elm_lang$core$Native_Utils.eq(model.ageError, _elm_lang$core$Maybe$Nothing) && _elm_lang$core$Native_Utils.eq(model.bibError, _elm_lang$core$Maybe$Nothing)));
+};
 var _user$project$Runner$initModel = {id: '', name: '', nameError: _elm_lang$core$Maybe$Nothing, location: '', locationError: _elm_lang$core$Maybe$Nothing, age: '', ageError: _elm_lang$core$Maybe$Nothing, bib: '', bibError: _elm_lang$core$Maybe$Nothing, error: _elm_lang$core$Maybe$Nothing};
 var _user$project$Runner$init = {ctor: '_Tuple2', _0: _user$project$Runner$initModel, _1: _elm_lang$core$Platform_Cmd$none};
 var _user$project$Runner$Model = function (a) {
@@ -14301,6 +14385,77 @@ var _user$project$Runner$Model = function (a) {
 		};
 	};
 };
+var _user$project$Runner$SaveResponse = function (a) {
+	return {ctor: 'SaveResponse', _0: a};
+};
+var _user$project$Runner$save = F2(
+	function (token, model) {
+		var decoder = A2(_elm_lang$core$Json_Decode$field, '_id', _elm_lang$core$Json_Decode$string);
+		var body = _elm_lang$http$Http$jsonBody(
+			_user$project$Runner$runnerEncoder(model));
+		var headers = {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$http$Http$header,
+				'Authorization',
+				A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', token)),
+			_1: {ctor: '[]'}
+		};
+		var request = A4(_user$project$Runner$post, _user$project$Runner$url, headers, body, decoder);
+		var cmd = A2(_elm_lang$http$Http$send, _user$project$Runner$SaveResponse, request);
+		return {ctor: '_Tuple2', _0: model, _1: cmd};
+	});
+var _user$project$Runner$update = F3(
+	function (token, msg, model) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
+			case 'NameInput':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{name: _p3._0, nameError: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'LocationInput':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{location: _p3._0, locationError: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'AgeInput':
+				return A2(_user$project$Runner$ageInput, model, _p3._0);
+			case 'BibInput':
+				return A2(_user$project$Runner$bibInput, model, _p3._0);
+			case 'Save':
+				var updatedModel = _user$project$Runner$validate(model);
+				return _user$project$Runner$isValid(updatedModel) ? A2(_user$project$Runner$save, token, updatedModel) : {ctor: '_Tuple2', _0: updatedModel, _1: _elm_lang$core$Platform_Cmd$none};
+			default:
+				if (_p3._0.ctor === 'Ok') {
+					return {ctor: '_Tuple2', _0: _user$project$Runner$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+				} else {
+					var errMsg = function () {
+						var _p4 = _p3._0._0;
+						if (_p4.ctor === 'BadStatus') {
+							return _p4._0.body;
+						} else {
+							return 'Error Saving!';
+						}
+					}();
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								error: _elm_lang$core$Maybe$Just(errMsg)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+		}
+	});
 var _user$project$Runner$Save = {ctor: 'Save'};
 var _user$project$Runner$BibInput = function (a) {
 	return {ctor: 'BibInput', _0: a};
@@ -14598,7 +14753,7 @@ var _user$project$Main$pageToHash = function (page) {
 		case 'LoginPage':
 			return '#/login';
 		case 'RunnerPage':
-			return '#/runner';
+			return '#/add';
 		default:
 			return '#notfound';
 	}
@@ -14621,7 +14776,25 @@ var _user$project$Main$Model = F6(
 		return {page: a, leaderBoard: b, login: c, runner: d, token: e, loggedin: f};
 	});
 var _user$project$Main$RunnerPage = {ctor: 'RunnerPage'};
+var _user$project$Main$authPages = {
+	ctor: '::',
+	_0: _user$project$Main$RunnerPage,
+	_1: {ctor: '[]'}
+};
+var _user$project$Main$authForPage = F2(
+	function (page, loggedin) {
+		return loggedin || (!A2(_elm_lang$core$List$member, page, _user$project$Main$authPages));
+	});
 var _user$project$Main$LoginPage = {ctor: 'LoginPage'};
+var _user$project$Main$authRedirect = F2(
+	function (page, loggedin) {
+		return A2(_user$project$Main$authForPage, page, loggedin) ? {ctor: '_Tuple2', _0: page, _1: _elm_lang$core$Platform_Cmd$none} : {
+			ctor: '_Tuple2',
+			_0: _user$project$Main$LoginPage,
+			_1: _elm_lang$navigation$Navigation$modifyUrl(
+				_user$project$Main$pageToHash(_user$project$Main$LoginPage))
+		};
+	});
 var _user$project$Main$LeaderBoardPage = {ctor: 'LeaderBoardPage'};
 var _user$project$Main$NotFound = {ctor: 'NotFound'};
 var _user$project$Main$hashToPage = function (hash) {
@@ -14633,7 +14806,7 @@ var _user$project$Main$hashToPage = function (hash) {
 			return _user$project$Main$LeaderBoardPage;
 		case '#/login':
 			return _user$project$Main$LoginPage;
-		case '#/runner':
+		case '#/add':
 			return _user$project$Main$RunnerPage;
 		case '':
 			return _user$project$Main$LeaderBoardPage;
@@ -14662,6 +14835,12 @@ var _user$project$Main$init = F2(
 		var _p4 = _user$project$LeaderBoard$init;
 		var leaderBoardInitModel = _p4._0;
 		var leaderBoardCmd = _p4._1;
+		var loggedin = !_elm_lang$core$Native_Utils.eq(flags.token, _elm_lang$core$Maybe$Nothing);
+		var page = _user$project$Main$hashToPage(location.hash);
+		var _p5 = A2(_user$project$Main$authRedirect, page, loggedin);
+		var updatedPage = _p5._0;
+		var cmd = _p5._1;
+		var initModel = {page: updatedPage, leaderBoard: leaderBoardInitModel, login: loginInitModel, runner: runnerInitModel, token: flags.token, loggedin: loggedin};
 		var cmds = _elm_lang$core$Platform_Cmd$batch(
 			{
 				ctor: '::',
@@ -14672,47 +14851,45 @@ var _user$project$Main$init = F2(
 					_1: {
 						ctor: '::',
 						_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$RunnerMsg, runnerCmd),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: cmd,
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			});
-		var page = _user$project$Main$hashToPage(location.hash);
-		var initModel = {
-			page: page,
-			leaderBoard: leaderBoardInitModel,
-			login: loginInitModel,
-			runner: runnerInitModel,
-			token: flags.token,
-			loggedin: !_elm_lang$core$Native_Utils.eq(flags.token, _elm_lang$core$Maybe$Nothing)
-		};
 		return {ctor: '_Tuple2', _0: initModel, _1: cmds};
 	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p5 = msg;
-		switch (_p5.ctor) {
+		var _p6 = msg;
+		switch (_p6.ctor) {
 			case 'Navigate':
-				var _p6 = _p5._0;
+				var _p7 = _p6._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{page: _p6}),
+						{page: _p7}),
 					_1: _elm_lang$navigation$Navigation$newUrl(
-						_user$project$Main$pageToHash(_p6))
+						_user$project$Main$pageToHash(_p7))
 				};
 			case 'ChangePage':
+				var _p8 = A2(_user$project$Main$authRedirect, _p6._0, model.loggedin);
+				var updatedPage = _p8._0;
+				var cmd = _p8._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{page: _p5._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
+						{page: updatedPage}),
+					_1: cmd
 				};
 			case 'LeaderBoardMsg':
-				var _p7 = A2(_user$project$LeaderBoard$update, _p5._0, model.leaderBoard);
-				var leaderBoardModel = _p7._0;
-				var cmd = _p7._1;
+				var _p9 = A2(_user$project$LeaderBoard$update, _p6._0, model.leaderBoard);
+				var leaderBoardModel = _p9._0;
+				var cmd = _p9._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -14721,15 +14898,15 @@ var _user$project$Main$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LeaderBoardMsg, cmd)
 				};
 			case 'LoginMsg':
-				var _p8 = A2(_user$project$Login$update, _p5._0, model.login);
-				var loginModel = _p8._0;
-				var cmd = _p8._1;
-				var token = _p8._2;
+				var _p10 = A2(_user$project$Login$update, _p6._0, model.login);
+				var loginModel = _p10._0;
+				var cmd = _p10._1;
+				var token = _p10._2;
 				var loggedin = !_elm_lang$core$Native_Utils.eq(token, _elm_lang$core$Maybe$Nothing);
 				var saveTokenCmd = function () {
-					var _p9 = token;
-					if (_p9.ctor === 'Just') {
-						return _user$project$Main$saveToken(_p9._0);
+					var _p11 = token;
+					if (_p11.ctor === 'Just') {
+						return _user$project$Main$saveToken(_p11._0);
 					} else {
 						return _elm_lang$core$Platform_Cmd$none;
 					}
@@ -14756,13 +14933,27 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{token: _elm_lang$core$Maybe$Nothing, loggedin: false}),
-					_1: _user$project$Main$deleteToken(
-						{ctor: '_Tuple0'})
+					_1: _elm_lang$core$Platform_Cmd$batch(
+						{
+							ctor: '::',
+							_0: _user$project$Main$deleteToken(
+								{ctor: '_Tuple0'}),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$navigation$Navigation$modifyUrl(
+									_user$project$Main$pageToHash(_user$project$Main$LeaderBoardPage)),
+								_1: {ctor: '[]'}
+							}
+						})
 				};
 			default:
-				var _p10 = A2(_user$project$Runner$update, _p5._0, model.runner);
-				var runnerModel = _p10._0;
-				var cmd = _p10._1;
+				var _p12 = A3(
+					_user$project$Runner$update,
+					A2(_elm_lang$core$Maybe$withDefault, '', model.token),
+					_p6._0,
+					model.runner);
+				var runnerModel = _p12._0;
+				var cmd = _p12._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -14801,8 +14992,9 @@ var _user$project$Main$locationToMsg = function (location) {
 var _user$project$Main$Navigate = function (a) {
 	return {ctor: 'Navigate', _0: a};
 };
-var _user$project$Main$authLogin = function (model) {
-	return _elm_lang$core$Native_Utils.eq(model.loggedin, true) ? A2(
+var _user$project$Main$authLogin = function (_p13) {
+	var _p14 = _p13;
+	return _p14.loggedin ? A2(
 		_elm_lang$html$Html$a,
 		{
 			ctor: '::',
@@ -14826,6 +15018,22 @@ var _user$project$Main$authLogin = function (model) {
 			_0: _elm_lang$html$Html$text('Login'),
 			_1: {ctor: '[]'}
 		});
+};
+var _user$project$Main$addRunnerview = function (_p15) {
+	var _p16 = _p15;
+	return _p16.loggedin ? A2(
+		_elm_lang$html$Html$a,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(
+				_user$project$Main$Navigate(_user$project$Main$RunnerPage)),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Add Runner'),
+			_1: {ctor: '[]'}
+		}) : _elm_lang$html$Html$text('');
 };
 var _user$project$Main$pageHeader = function (model) {
 	return A2(
@@ -14858,19 +15066,7 @@ var _user$project$Main$pageHeader = function (model) {
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$a,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Events$onClick(
-											_user$project$Main$Navigate(_user$project$Main$RunnerPage)),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('Add Runner'),
-										_1: {ctor: '[]'}
-									}),
+								_0: _user$project$Main$addRunnerview(model),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
@@ -14899,8 +15095,8 @@ var _user$project$Main$pageHeader = function (model) {
 };
 var _user$project$Main$view = function (model) {
 	var page = function () {
-		var _p11 = model.page;
-		switch (_p11.ctor) {
+		var _p17 = model.page;
+		switch (_p17.ctor) {
 			case 'LeaderBoardPage':
 				return A2(
 					_elm_lang$html$Html$map,
@@ -14978,7 +15174,7 @@ var _user$project$Main$main = A2(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Login.Msg":{"args":[],"tags":{"UsernameInput":["String"],"Error":["String"],"Submit":[],"LoginResponse":["Result.Result Http.Error String"],"PasswordInput":["String"]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Runner.Msg":{"args":[],"tags":{"BibInput":["String"],"AgeInput":["String"],"LocationInput":["String"],"NameInput":["String"],"Save":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"LeaderBoard.Msg":{"args":[],"tags":{"SearchInput":["String"],"Search":[]}},"Main.Msg":{"args":[],"tags":{"LoginMsg":["Login.Msg"],"LogoutMsg":[],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"LeaderBoardMsg":["LeaderBoard.Msg"],"RunnerMsg":["Runner.Msg"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Main.Page":{"args":[],"tags":{"LeaderBoardPage":[],"NotFound":[],"LoginPage":[],"RunnerPage":[]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Login.Msg":{"args":[],"tags":{"UsernameInput":["String"],"Error":["String"],"Submit":[],"LoginResponse":["Result.Result Http.Error String"],"PasswordInput":["String"]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Runner.Msg":{"args":[],"tags":{"BibInput":["String"],"AgeInput":["String"],"LocationInput":["String"],"SaveResponse":["Result.Result Http.Error String"],"NameInput":["String"],"Save":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"LeaderBoard.Msg":{"args":[],"tags":{"SearchInput":["String"],"Search":[]}},"Main.Msg":{"args":[],"tags":{"LoginMsg":["Login.Msg"],"LogoutMsg":[],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"LeaderBoardMsg":["LeaderBoard.Msg"],"RunnerMsg":["Runner.Msg"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Main.Page":{"args":[],"tags":{"LeaderBoardPage":[],"NotFound":[],"LoginPage":[],"RunnerPage":[]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
