@@ -14362,8 +14362,6 @@ var _user$project$Runner$url = 'http://localhost:5000/runner';
 var _user$project$Runner$isValid = function (model) {
 	return _elm_lang$core$Native_Utils.eq(model.nameError, _elm_lang$core$Maybe$Nothing) && (_elm_lang$core$Native_Utils.eq(model.locationError, _elm_lang$core$Maybe$Nothing) && (_elm_lang$core$Native_Utils.eq(model.ageError, _elm_lang$core$Maybe$Nothing) && _elm_lang$core$Native_Utils.eq(model.bibError, _elm_lang$core$Maybe$Nothing)));
 };
-var _user$project$Runner$initModel = {id: '', name: '', nameError: _elm_lang$core$Maybe$Nothing, location: '', locationError: _elm_lang$core$Maybe$Nothing, age: '', ageError: _elm_lang$core$Maybe$Nothing, bib: '', bibError: _elm_lang$core$Maybe$Nothing, error: _elm_lang$core$Maybe$Nothing};
-var _user$project$Runner$init = {ctor: '_Tuple2', _0: _user$project$Runner$initModel, _1: _elm_lang$core$Platform_Cmd$none};
 var _user$project$Runner$Model = function (a) {
 	return function (b) {
 		return function (c) {
@@ -14374,7 +14372,9 @@ var _user$project$Runner$Model = function (a) {
 							return function (h) {
 								return function (i) {
 									return function (j) {
-										return {id: a, name: b, nameError: c, location: d, locationError: e, age: f, ageError: g, bib: h, bibError: i, error: j};
+										return function (k) {
+											return {id: a, name: b, nameError: c, location: d, locationError: e, age: f, ageError: g, bib: h, bibError: i, error: j, status: k};
+										};
 									};
 								};
 							};
@@ -14384,6 +14384,15 @@ var _user$project$Runner$Model = function (a) {
 			};
 		};
 	};
+};
+var _user$project$Runner$NotSaved = {ctor: 'NotSaved'};
+var _user$project$Runner$initModel = {id: '', name: '', nameError: _elm_lang$core$Maybe$Nothing, location: '', locationError: _elm_lang$core$Maybe$Nothing, age: '', ageError: _elm_lang$core$Maybe$Nothing, bib: '', bibError: _elm_lang$core$Maybe$Nothing, error: _elm_lang$core$Maybe$Nothing, status: _user$project$Runner$NotSaved};
+var _user$project$Runner$init = {ctor: '_Tuple2', _0: _user$project$Runner$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$Runner$Saved = function (a) {
+	return {ctor: 'Saved', _0: a};
+};
+var _user$project$Runner$Saving = function (a) {
+	return {ctor: 'Saving', _0: a};
 };
 var _user$project$Runner$SaveResponse = function (a) {
 	return {ctor: 'SaveResponse', _0: a};
@@ -14403,7 +14412,15 @@ var _user$project$Runner$save = F2(
 		};
 		var request = A4(_user$project$Runner$post, _user$project$Runner$url, headers, body, decoder);
 		var cmd = A2(_elm_lang$http$Http$send, _user$project$Runner$SaveResponse, request);
-		return {ctor: '_Tuple2', _0: model, _1: cmd};
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					status: _user$project$Runner$Saving('Saving runner ...')
+				}),
+			_1: cmd
+		};
 	});
 var _user$project$Runner$update = F3(
 	function (token, msg, model) {
@@ -14434,7 +14451,15 @@ var _user$project$Runner$update = F3(
 				return _user$project$Runner$isValid(updatedModel) ? A2(_user$project$Runner$save, token, updatedModel) : {ctor: '_Tuple2', _0: updatedModel, _1: _elm_lang$core$Platform_Cmd$none};
 			default:
 				if (_p3._0.ctor === 'Ok') {
-					return {ctor: '_Tuple2', _0: _user$project$Runner$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							_user$project$Runner$initModel,
+							{
+								status: _user$project$Runner$Saved('Runner is saved!')
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
 				} else {
 					var errMsg = function () {
 						var _p4 = _p3._0._0;
@@ -14449,7 +14474,8 @@ var _user$project$Runner$update = F3(
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{
-								error: _elm_lang$core$Maybe$Just(errMsg)
+								error: _elm_lang$core$Maybe$Just(errMsg),
+								status: _user$project$Runner$NotSaved
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
@@ -14713,7 +14739,29 @@ var _user$project$Runner$viewForm = function (model) {
 															_0: _elm_lang$html$Html$text('Save'),
 															_1: {ctor: '[]'}
 														}),
-													_1: {ctor: '[]'}
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$span,
+															{ctor: '[]'},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text(
+																	function () {
+																		var _p5 = model.status;
+																		switch (_p5.ctor) {
+																			case 'Saving':
+																				return _p5._0;
+																			case 'Saved':
+																				return _p5._0;
+																			default:
+																				return '';
+																		}
+																	}()),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}
 												}
 											}),
 										_1: {ctor: '[]'}

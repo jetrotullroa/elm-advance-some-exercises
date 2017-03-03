@@ -23,7 +23,14 @@ type alias Model =
     , bib : String
     , bibError : Maybe String
     , error : Maybe String
+    , status : Status
     }
+
+
+type Status
+    = Saving String
+    | Saved String
+    | NotSaved
 
 
 initModel : Model
@@ -38,6 +45,7 @@ initModel =
     , bib = ""
     , bibError = Nothing
     , error = Nothing
+    , status = NotSaved
     }
 
 
@@ -95,7 +103,7 @@ update token msg model =
                     ( updatedModel, Cmd.none )
 
         SaveResponse (Ok id) ->
-            ( initModel, Cmd.none )
+            ( { initModel | status = Saved "Runner is saved!" }, Cmd.none )
 
         SaveResponse (Err err) ->
             let
@@ -107,7 +115,12 @@ update token msg model =
                         _ ->
                             "Error Saving!"
             in
-                ( { model | error = Just errMsg }, Cmd.none )
+                ( { model
+                    | error = Just errMsg
+                    , status = NotSaved
+                  }
+                , Cmd.none
+                )
 
 
 isValid : Model -> Bool
@@ -162,7 +175,7 @@ save token model =
         cmd =
             Http.send SaveResponse request
     in
-        ( model, cmd )
+        ( { model | status = Saving "Saving runner ..." }, cmd )
 
 
 post : String -> List Http.Header -> Http.Body -> JD.Decoder a -> Http.Request a
@@ -341,6 +354,18 @@ viewForm model =
             , div []
                 [ label [] []
                 , button [ type_ "submit" ] [ text "Save" ]
+                , span []
+                    [ text <|
+                        case model.status of
+                            Saving savingMsg ->
+                                savingMsg
+
+                            Saved savedMsg ->
+                                savedMsg
+
+                            NotSaved ->
+                                ""
+                    ]
                 ]
             ]
         ]
